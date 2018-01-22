@@ -66,13 +66,24 @@ def train(model_name, dataset_name):
     image_size = (320, 240)
 
     # Training parameters
-    n_epochs = 10
-    batch_size = 1
-    steps_per_epoch = n_images['train'] // batch_size // n_epochs
+    n_epochs = 20
+    batch_size = 10
+    steps_per_epoch = n_images['train'] // batch_size #// n_epochs
     
     # Load data generators
     
-    train_datagen = ImageDataGenerator(rescale=1. / 255)
+    # train_datagen = ImageDataGenerator(rescale=1. / 255)
+
+    train_datagen = ImageDataGenerator(
+        rescale=1. / 255,
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest')
+
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
     class_mode = 'binary'
@@ -130,7 +141,7 @@ def train(model_name, dataset_name):
 
 if __name__=='__main__':
 
-    model_name = 'small_binary_cnn_v0'
+    model_name = 'vgg16_v0'
     dataset_name = 'robot_human'
 
     train(model_name, dataset_name)
