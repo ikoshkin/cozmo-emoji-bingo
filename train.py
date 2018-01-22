@@ -67,8 +67,8 @@ def train(model_name, dataset_name):
 
     # Training parameters
     n_epochs = 10
-    batch_size = 5
-    steps_per_epoch = n_images['train'] // batch_size
+    batch_size = 1
+    steps_per_epoch = n_images['train'] // batch_size // n_epochs
     
     # Load data generators
     
@@ -134,5 +134,5 @@ if __name__=='__main__':
     dataset_name = 'robot_human'
 
     train(model_name, dataset_name)
-    h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
-    plot_history(h_df)
+    # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
+    # plot_history(h_df)
