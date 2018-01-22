@@ -13,7 +13,7 @@ from data import get_data_dirs
 def save_history(history, fname):
 
     h_df = pd.DataFrame(history)
-    h_df.to_csv("./output/logs/history_{}.csv").format(fname)
+    h_df.to_csv("./output/logs/history_{}.csv".format(fname))
     print(history)
 
     loss = history.history['loss']
