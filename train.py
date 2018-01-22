@@ -133,6 +133,6 @@ if __name__=='__main__':
     model_name = 'small_binary_cnn_v0'
     dataset_name = 'robot_human'
 
-    # train(model_name, dataset_name)
+    train(model_name, dataset_ name)
     h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
     plot_history(h_df)
