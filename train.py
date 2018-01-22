@@ -66,7 +66,7 @@ def train(model_name, dataset_name):
     image_size = (320, 240)
 
     #: Training parameters
-    n_epochs = 100
+    n_epochs = 10
     batch_size = 10
     steps_per_epoch = n_images['train'] // batch_size #// n_epochs
     
@@ -92,7 +92,9 @@ def train(model_name, dataset_name):
         data_dir['train'],
         target_size=image_size,
         batch_size=batch_size,
-        class_mode=class_mode)
+        class_mode=class_mode,
+        save_to_dir='./images/keras_train'
+        )
 
     validation_generator = test_datagen.flow_from_directory(
         data_dir['validation'],
@@ -142,6 +144,7 @@ if __name__=='__main__':
 
     history = train(model_name, dataset_name)
     h_df = pd.DataFrame(history.history)
+    h_df.to_csv()
     # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
 
-    plot_history(h_df, fname='cnn_multi_h_r.png')
+    # plot_history(h_df, fname='cnn_multi_h_r.png')
