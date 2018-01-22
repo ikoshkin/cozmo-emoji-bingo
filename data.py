@@ -18,7 +18,7 @@ def get_data_dirs(dataset_name):
     validation_dir = os.path.join(DATASET_DIR, 'validation')
     test_dir = os.path.join(DATASET_DIR, 'test')
 
-    return (train_dir, validation_dir, test_dir)
+    return {'train': train_dir, 'validation': validation_dir, 'test': test_dir}
 
 
 def new_folder(path):
@@ -78,4 +78,4 @@ if __name__ == '__main__':
     # print(get_dirs('doll_seashell'))
 
     labels = ['robot', 'human']
-    build_dataset(labels)
+    # build_dataset(labels)
