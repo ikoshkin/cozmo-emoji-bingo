@@ -3,8 +3,8 @@ import os
 from keras import layers
 from keras import models
 from keras import optimizers
+from keras import applications
 from keras.callbacks import ModelCheckpoint
-from keras.applications import VGG16
 from keras.preprocessing.image import ImageDataGenerator
 
 
@@ -27,12 +27,12 @@ class ModelLoader():
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
-        elif self.model_name == 'small_binary_cnn_v1':
-            print('Loading Small Binary CNN v0')
+        elif self.model_name == 'vgg16_v0':
+            print('CNN vgg16')
             self.input_shape = (image_size + (3,))
-            self.model = self.small_cnn_v0()
+            self.model = self.small_vgg16_v0()
             self.loss = 'binary_crossentropy'
-            self.optimizer = optimizers.RMSprop(lr=1e-4)
+            self.optimizer = optimizers.RMSprop(lr=1e-5)
             self.metrics = ['acc']
 
         else:
@@ -62,5 +62,29 @@ class ModelLoader():
 
         return model
 
-    def small_cnn_v1(self):
-        pass
+    def small_vgg16_v0(self):
+
+        conv_base = applications.VGG16(weights="imagenet",
+                                       include_top=False,
+                                       input_shape=self.input_shape)
+        conv_base.trainable = True
+        set_trainable = False
+        for layer in conv_base.layers:
+            if layer.name == 'block5_conv1':
+                set_trainable = True
+            if set_trainable:
+                layer.trainable = True
+            else:
+                layer.trainable = False
+
+        model = models.Sequential()
+        model.add(conv_base)
+        model.add(layers.Flatten())
+        model.add(layers.Dense(256, activation='relu'))
+        model.add(layers.Dense(1, activation='sigmoid'))
+
+        return model
+        
+
+        
+        
