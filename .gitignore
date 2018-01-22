@@ -3,8 +3,20 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
+# macOS
+.DS_Store
+
+#Datasets
+images/
+
+#shell
+.sh/
+*.sh
+
+# Model savefiles
+h5/
+*.h5
+*.hdf5
 
 # Distribution / packaging
 .Python
