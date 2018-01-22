@@ -1,7 +1,5 @@
 import os
 
-import matplotlib.pyplot as plt
-
 from keras import layers
 from keras import models
 from keras import optimizers

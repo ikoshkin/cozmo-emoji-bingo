@@ -2,6 +2,7 @@ import os
 import time
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from keras.models import load_model
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, CSVLogger
@@ -31,12 +32,12 @@ def save_history(history, fname):
     #             i, loss[i], acc[i], val_loss[i], val_acc[i]))
 
 
-def plot_history(hist):
+def plot_history(hist_df):
 
-    acc = history.history['acc']
-    val_acc = history.history['val_acc']
-    loss = history.history['loss']
-    val_loss = history.history['val_loss']
+    acc = hist_df['acc']
+    val_acc = hist_df['val_acc']
+    loss = hist_df['loss']
+    val_loss = hist_df['val_loss']
 
     epochs = range(1, len(acc) + 1)
 
@@ -65,9 +66,9 @@ def train(model_name, dataset_name):
     image_size = (320, 240)
 
     # Training parameters
-    n_epochs = 20
-    batch_size = 1
-    steps_per_epoch = n_images['train'] // n_epochs // batch_size
+    n_epochs = 10
+    batch_size = 5
+    steps_per_epoch = n_images['train'] // batch_size
     
     # Load data generators
     
@@ -114,7 +115,7 @@ def train(model_name, dataset_name):
 
     history = model.fit_generator(
         generator=train_generator,
-        steps_per_epoch=n_epochs,
+        steps_per_epoch=steps_per_epoch,
         epochs=n_epochs,
         verbose=1,
         callbacks=callbacks,
@@ -132,4 +133,6 @@ if __name__=='__main__':
     model_name = 'small_binary_cnn_v0'
     dataset_name = 'robot_human'
 
-    train(model_name, dataset_name)
+    # train(model_name, dataset_name)
+    h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
+    plot_history(h_df)
