@@ -122,8 +122,8 @@ def train(model_name, dataset_name):
         validation_steps=10,
     )
 
-    model.save('./output/{}.h5'.format(model.model_name))
-    save_history(history, "hist_{}".format(model.model_name))
+    model.save('./output/{}.h5'.format(model_name))
+    save_history(history, "hist_{}".format(model_name))
     return
 
 
