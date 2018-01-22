@@ -9,6 +9,7 @@ __pycache__/
 
 #Datasets
 images/
+testpred/
 
 #shell
 .sh/

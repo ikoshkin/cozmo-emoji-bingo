@@ -26,9 +26,10 @@ def new_folder(path):
     return
 
 
-def build_dataset(labels=None, n_train=400, n_val=50, n_test=50, seed=42):
+def build_dataset(targets, dataset_name, n_images, seed=42):
 
-    dataset_name = '_'.join(labels)
+    if dataset_name is None:
+        dataset_name = '_'.join(labels)
 
     original_dataset_dir = os.path.join(IMAGES_DIR, 'originals')
     base_dir = os.path.join(IMAGES_DIR, dataset_name)
@@ -41,41 +42,55 @@ def build_dataset(labels=None, n_train=400, n_val=50, n_test=50, seed=42):
     test_dir = os.path.join(base_dir, 'test')
     new_folder(test_dir)
 
-    for l in labels:
-        original_l_dir = os.path.join(original_dataset_dir, l)
+    for target in targets:
+        original_target_dir = os.path.join(original_dataset_dir, target)
 
-        train_l_dir = os.path.join(train_dir, l)
-        new_folder(train_l_dir)
+        train_target_dir = os.path.join(train_dir, target)
+        new_folder(train_target_dir)
 
-        validation_l_dir = os.path.join(validation_dir, l)
-        new_folder(validation_l_dir)
+        validation_target_dir = os.path.join(validation_dir, target)
+        new_folder(validation_target_dir)
 
-        test_l_dir = os.path.join(test_dir, l)
-        new_folder(test_l_dir)
+        test_target_dir = os.path.join(test_dir, target)
+        new_folder(test_target_dir)
 
-        fnames = [f for f in os.listdir(original_l_dir) if f.endswith('.jpeg')]
+        fnames = [f for f in os.listdir(original_target_dir) if f.endswith('.jpeg')]
         random.seed(42)
         random.shuffle(fnames)
 
-        for fname in fnames[:n_train]:
-            src = os.path.join(original_l_dir, fname)
-            dst = os.path.join(train_l_dir, fname)
+        idx_train = n_images['train']
+        idx_val = idx_train + n_images['validation']
+        idx_test = idx_val + n_images['test']
+
+        for fname in fnames[:idx_train]:
+            src = os.path.join(original_target_dir, fname)
+            dst = os.path.join(train_target_dir, fname)
             shutil.copyfile(src, dst)
 
-        for fname in fnames[n_train:(n_train + n_val)]:
-            src = os.path.join(original_l_dir, fname)
-            dst = os.path.join(validation_l_dir, fname)
+        for fname in fnames[idx_train:idx_val]:
+            src = os.path.join(original_target_dir, fname)
+            dst = os.path.join(validation_target_dir, fname)
             shutil.copyfile(src, dst)
 
-        for fname in fnames[(n_train + n_val):n_test]:
-            src = os.path.join(original_l_dir, fname)
-            dst = os.path.join(test_l_dir, fname)
+        for fname in fnames[idx_val:idx_test]:
+            src = os.path.join(original_target_dir, fname)
+            dst = os.path.join(test_target_dir, fname)
             shutil.copyfile(src, dst)
+
+        print('total training {} images: {}'.format(
+            target, len(os.listdir(train_target_dir))))
+        print('total validating {} images: {}'.format(
+            target, len(os.listdir(validation_target_dir))))
+        print('total testing {} images: {}'.format(
+            target, len(os.listdir(test_target_dir))))
+
     return
 
 
 if __name__ == '__main__':
-    # print(get_dirs('doll_seashell'))
 
-    labels = ['robot', 'human']
-    # build_dataset(labels)
+    targets = ['human', 'robot']
+    n_images = {'train': 400, 'validation': 50, 'test': 50}
+    dataset_name = 'human_robot_multiclass'
+
+    build_dataset(targets, dataset_name, n_images)
