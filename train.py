@@ -15,7 +15,6 @@ def save_history(history, fname):
 
     h_df = pd.DataFrame(history.history)
 
-    new_folder('"./output/logs/')
     h_df.to_csv("./output/logs/history_{}.csv".format(fname))
     print(history)
 
@@ -26,12 +25,6 @@ def save_history(history, fname):
     nb_epoch = len(acc)
 
     return
-
-    # with open(os.path.join("/Users/benja/code/jester/result", 'result_{}.txt'.format(name)), 'w') as fp:
-    #     fp.write('epoch\tloss\tacc\tval_loss\tval_acc\n')
-    #     for i in range(nb_epoch):
-    #         fp.write('{}\t{}\t{}\t{}\t{}\n'.format(
-    #             i, loss[i], acc[i], val_loss[i], val_acc[i]))
 
 
 def plot_history(hist_df, fname=None):
@@ -66,12 +59,17 @@ def plot_history(hist_df, fname=None):
 labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human']
             #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
-def train(model_name, dataset_name, targets):
+def train(model_name, dataset_name, targets, info):
 
     #: Data parameters
     data_dir = get_data_dirs(dataset_name)
     n_images = {'train': 300, 'validation': 100, 'test': 100}
     image_size = (320, 240)
+
+    if not os.path.exists("./output/hdf5"):
+        new_folder("./output/hdf5")
+    if not os.path.exists("./output/logs"):
+        new_folder("./output/logs"))
 
     #: Training parameters
 
@@ -81,17 +79,17 @@ def train(model_name, dataset_name, targets):
     
     #: Load data generators
     
-    train_datagen = ImageDataGenerator(rescale=1. / 255)
+    # train_datagen = ImageDataGenerator(rescale=1. / 255)
 
-    # train_datagen = ImageDataGenerator(
-    #     rescale=1. / 255,
-    #     rotation_range=40,
-    #     width_shift_range=0.2,
-    #     height_shift_range=0.2,
-    #     shear_range=0.2,
-    #     zoom_range=0.2,
-    #     horizontal_flip=True,
-    #     fill_mode='nearest')
+    train_datagen = ImageDataGenerator(
+        rescale=1. / 255,
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest')
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -117,7 +115,6 @@ def train(model_name, dataset_name, targets):
     ml = ModelLoader(n_labels=n_labels, model_name=model_name,
                      image_size=image_size)
     model = ml.model
-    new_folder('"./output/hdf5/')
 
     #: Define callbacks
     checkpointer = ModelCheckpoint(
@@ -141,8 +138,9 @@ def train(model_name, dataset_name, targets):
         validation_steps=20
     )
 
-    model.save('./output/{}.h5'.format(model_name))
-    save_history(history, "hist_{}".format(model_name))
+    model.save('./output/{}_{}.h5'.format(model_name, info))
+    save_history(history, "hist_{}_{}".format(model_name, info))
+
     return history
 
 
@@ -150,15 +148,17 @@ if __name__=='__main__':
 
     # model_name = 'vgg16_v0'
     # dataset_name = 'robot_human'
+    
 
     model_name = 'simple_cnn_multi'
     dataset_name = 'five_multiclass'
+    model_run_info = '5c_with_aug'
+
     targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human']#,
             #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
-    history = train(model_name, dataset_name, targets)
+    history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
     h_df.to_csv('five_multiclass.csv')
-    # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
 
     # plot_history(h_df, fname='cnn_multi_h_r.png')
