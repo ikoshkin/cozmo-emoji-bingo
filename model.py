@@ -90,7 +90,7 @@ class ModelLoader():
         #: Classifier Network - stack of dense layers
         model.add(layers.Flatten())
         model.add(layers.Dense(512, activation='relu'))
-        model.add(layers.Dense(2, activation='softmax'))
+        model.add(layers.Dense(self.n_labels, activation='softmax'))
 
         return model
 
