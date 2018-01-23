@@ -69,7 +69,7 @@ def train(model_name, dataset_name, targets, info):
     if not os.path.exists("./output/hdf5"):
         new_folder("./output/hdf5")
     if not os.path.exists("./output/logs"):
-        new_folder("./output/logs"))
+        new_folder("./output/logs")
 
     #: Training parameters
 
