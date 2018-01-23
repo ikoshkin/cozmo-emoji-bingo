@@ -9,11 +9,13 @@ from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, CSVLogg
 from keras.preprocessing.image import ImageDataGenerator
 
 from model import ModelLoader
-from data import get_data_dirs
+from data import get_data_dirs, new_folder
 
 def save_history(history, fname):
 
     h_df = pd.DataFrame(history.history)
+
+    new_folder('"./output/logs/')
     h_df.to_csv("./output/logs/history_{}.csv".format(fname))
     print(history)
 
@@ -32,7 +34,7 @@ def save_history(history, fname):
     #             i, loss[i], acc[i], val_loss[i], val_acc[i]))
 
 
-def plot_history(hist_df, fname='train_history.png'):
+def plot_history(hist_df, fname=None):
 
     acc = hist_df['acc']
     val_acc = hist_df['val_acc']
@@ -53,38 +55,48 @@ def plot_history(hist_df, fname='train_history.png'):
     plt.title('Training and validation loss')
     plt.legend()
 
-    plt.savefig(fname)
+    if fname is not None:
+        plt.savefig(fname)
+    else:
+        plt.show()
+
     return
 
 
-labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human',
-               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human']
+            #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
 def train(model_name, dataset_name, targets):
 
     #: Data parameters
     data_dir = get_data_dirs(dataset_name)
-    n_images = {'train': 400, 'validation': 50, 'test': 50}
+    n_images = {'train': 300, 'validation': 100, 'test': 100}
     image_size = (320, 240)
 
     #: Training parameters
+<<<<<<< HEAD
     n_epochs = 100
     batch_size = 128
+=======
+
+    n_epochs = 100
+    batch_size = 20
+>>>>>>> a7ae5abc8872dc24478eaef5aa46be9982666a7a
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
     
-    # train_datagen = ImageDataGenerator(rescale=1. / 255)
+    train_datagen = ImageDataGenerator(rescale=1. / 255)
 
-    train_datagen = ImageDataGenerator(
-        rescale=1. / 255,
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True,
-        fill_mode='nearest')
+    # train_datagen = ImageDataGenerator(
+    #     rescale=1. / 255,
+    #     rotation_range=40,
+    #     width_shift_range=0.2,
+    #     height_shift_range=0.2,
+    #     shear_range=0.2,
+    #     zoom_range=0.2,
+    #     horizontal_flip=True,
+    #     fill_mode='nearest')
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -95,7 +107,7 @@ def train(model_name, dataset_name, targets):
         target_size=image_size,
         batch_size=batch_size,
         class_mode=class_mode,
-        save_to_dir='./images/keras_train'
+        # save_to_dir='./images/keras_train'
         )
 
     validation_generator = test_datagen.flow_from_directory(
@@ -110,13 +122,14 @@ def train(model_name, dataset_name, targets):
     ml = ModelLoader(n_labels=n_labels, model_name=model_name,
                      image_size=image_size)
     model = ml.model
+    new_folder('"./output/hdf5/')
 
     #: Define callbacks
     checkpointer = ModelCheckpoint(
         filepath='./output/hdf5/{}'.format(model_name) +
         '-{epoch:03d}-{loss:.3f}.hdf5',
         verbose=1,
-        save_best_only=True)
+        save_best_only=True, save_weights_only=True)
 
     callbacks = [checkpointer]
 
@@ -130,7 +143,7 @@ def train(model_name, dataset_name, targets):
         verbose=1,
         callbacks=callbacks,
         validation_data=validation_generator,
-        validation_steps=10
+        validation_steps=20
     )
 
     model.save('./output/{}.h5'.format(model_name))
@@ -144,13 +157,13 @@ if __name__=='__main__':
     # dataset_name = 'robot_human'
 
     model_name = 'simple_cnn_multi'
-    dataset_name = 'all_multiclass'
-    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human',
-               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+    dataset_name = 'five_multiclass'
+    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human']#,
+            #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
     history = train(model_name, dataset_name, targets)
     h_df = pd.DataFrame(history.history)
-    h_df.to_csv('all_multiclass.csv')
+    h_df.to_csv('five_multiclass.csv')
     # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
 
     # plot_history(h_df, fname='cnn_multi_h_r.png')

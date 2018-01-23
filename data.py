@@ -91,8 +91,9 @@ def build_dataset(targets, dataset_name, n_images, seed=42):
 
 if __name__ == '__main__':
 
-    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human', 'lipstick', 'octopus', 'poop','robot', 'rocket', 'unicorn']
-    n_images = {'train': 400, 'validation': 50, 'test': 50}
-    dataset_name = 'all_multiclass'
+    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human']#, 'lipstick', 'octopus', 'poop','robot', 'rocket', 'unicorn']
+    data_split= {'train': 300, 'validation': 100, 'test': 100}
 
-    build_dataset(targets, dataset_name, n_images)
+    dataset_name = 'five_multiclass'
+
+    build_dataset(targets, dataset_name, data_split)
