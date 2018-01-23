@@ -56,8 +56,8 @@ def plot_history(hist_df, fname=None):
     return
 
 
-labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human']
-            #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+labels_want = ['alien', 'devil', 'ghost', 'hearteyes',
+               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
 def train(model_name, dataset_name, targets, info):
 
@@ -151,14 +151,14 @@ if __name__=='__main__':
     
 
     model_name = 'simple_cnn_multi'
-    dataset_name = 'five_multiclass'
-    model_run_info = '5c_with_aug'
+    dataset_name = 'ten_multiclass'
+    model_run_info = '10c_with_aug'
 
-    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human']#,
-            #    'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+    ['alien', 'devil', 'ghost', 'hearteyes', 'lipstick',
+        'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
-    h_df.to_csv('five_multiclass.csv')
+    # h_df.to_csv('10_multiclass.csv')
 
     # plot_history(h_df, fname='cnn_multi_h_r.png')
