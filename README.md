@@ -20,7 +20,7 @@ Cozmo is super awesome.
 And he is cute.
 Lorem Ipsum
 
-![finder](assets/cozmo-g.png)
+![finder](assets/cozmo-g-2.png)
 
 Cozmo has some superpowers that make him stand out:
  * on-board VGA camera,
