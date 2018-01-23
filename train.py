@@ -68,9 +68,9 @@ def train(model_name, dataset_name, targets):
     image_size = (320, 240)
 
     #: Training parameters
-    n_epochs = 10
-    batch_size = 10
-    steps_per_epoch = n_images['train'] // batch_size #// n_epochs
+    n_epochs = 100
+    batch_size = 128
+    steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
     
