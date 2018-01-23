@@ -117,13 +117,14 @@ def train(model_name, dataset_name, targets):
     ml = ModelLoader(n_labels=n_labels, model_name=model_name,
                      image_size=image_size)
     model = ml.model
+    new_folder('"./output/hdf5/')
 
     #: Define callbacks
     checkpointer = ModelCheckpoint(
         filepath='./output/hdf5/{}'.format(model_name) +
         '-{epoch:03d}-{loss:.3f}.hdf5',
         verbose=1,
-        save_best_only=True)
+        save_best_only=True, save_weights_only=True)
 
     callbacks = [checkpointer]
 
