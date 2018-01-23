@@ -1,6 +1,8 @@
 import os
+import sys
 import shutil
 import random
+
 from keras.preprocessing.image import ImageDataGenerator
 
 DIR = os.path.dirname(os.path.abspath(__file__))
@@ -89,8 +91,8 @@ def build_dataset(targets, dataset_name, n_images, seed=42):
 
 if __name__ == '__main__':
 
-    targets = ['human', 'robot']
+    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human', 'lipstick', 'octopus', 'poop','robot', 'rocket', 'unicorn']
     n_images = {'train': 400, 'validation': 50, 'test': 50}
-    dataset_name = 'human_robot_multiclass'
+    dataset_name = 'all_multiclass'
 
     build_dataset(targets, dataset_name, n_images)

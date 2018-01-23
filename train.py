@@ -56,7 +56,9 @@ def plot_history(hist_df, fname='train_history.png'):
     plt.savefig(fname)
     return
 
-labels_want = ['robot','human']
+
+labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human',
+               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
 def train(model_name, dataset_name):
 
@@ -104,7 +106,9 @@ def train(model_name, dataset_name):
 
 
     #: Load model
-    ml = ModelLoader(n_labels=2, model_name=model_name, image_size=image_size)
+    n_labels = len(labels_want)
+    ml = ModelLoader(n_labels=n_labels, model_name=model_name,
+                     image_size=image_size)
     model = ml.model
 
     #: Define callbacks
@@ -140,11 +144,11 @@ if __name__=='__main__':
     # dataset_name = 'robot_human'
 
     model_name = 'simple_cnn_multi'
-    dataset_name = 'human_robot_multiclass'
+    dataset_name = 'all_multiclass'
 
     history = train(model_name, dataset_name)
     h_df = pd.DataFrame(history.history)
-    h_df.to_csv()
+    h_df.to_csv('all_multiclass.csv')
     # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
 
     # plot_history(h_df, fname='cnn_multi_h_r.png')
