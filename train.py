@@ -154,7 +154,7 @@ if __name__=='__main__':
     dataset_name = 'ten_multiclass'
     model_run_info = '10c_with_aug'
 
-    ['alien', 'devil', 'ghost', 'hearteyes', 'lipstick',
+    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'lipstick',
         'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
     history=train(model_name, dataset_name, targets, model_run_info)
