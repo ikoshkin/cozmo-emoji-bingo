@@ -60,7 +60,7 @@ def plot_history(hist_df, fname='train_history.png'):
 labels_want = ['alien', 'devil', 'ghost', 'hearteyes', 'human',
                'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
-def train(model_name, dataset_name):
+def train(model_name, dataset_name, targets):
 
     #: Data parameters
     data_dir = get_data_dirs(dataset_name)
@@ -106,7 +106,7 @@ def train(model_name, dataset_name):
 
 
     #: Load model
-    n_labels = len(labels_want)
+    n_labels = len(targets)
     ml = ModelLoader(n_labels=n_labels, model_name=model_name,
                      image_size=image_size)
     model = ml.model
@@ -145,8 +145,10 @@ if __name__=='__main__':
 
     model_name = 'simple_cnn_multi'
     dataset_name = 'all_multiclass'
+    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'human',
+               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
-    history = train(model_name, dataset_name)
+    history = train(model_name, dataset_name, targets)
     h_df = pd.DataFrame(history.history)
     h_df.to_csv('all_multiclass.csv')
     # h_df = pd.read_csv('./output-aws/logs/history_hist_small_binary_cnn_v0.csv')
