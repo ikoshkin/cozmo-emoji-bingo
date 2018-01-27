@@ -209,8 +209,6 @@ def drop_history(h):
 
 if __name__ == '__main__':
 
-    
-
 
     if os.path.exists('./hyperas'):
         shutil.rmtree('./hyperas')
@@ -220,6 +218,13 @@ if __name__ == '__main__':
     
 
     train_datagen, val_datagen, test_datagen = data()
+
+    test_generator = test_datagen.flow_from_directory(
+        test_dir,
+        target_size=(244, 244),
+        color_mode='grayscale',
+        batch_size=16,
+        class_mode='categorical')
 
     functions = [drop_history]
 
@@ -233,5 +238,6 @@ if __name__ == '__main__':
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20))
+    
     if K.backend() == 'tensorflow':
-        K.clear_session()
+            K.clear_session()
