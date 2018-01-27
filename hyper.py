@@ -162,7 +162,7 @@ def model(train_datagen, val_datagen, test_datagen):
         train_dir,
         target_size=image_size,
         color_mode=color_mode,
-        batch_size=batch_size
+        batch_size=batch_size,
         class_mode=class_mode)
 
     validation_generator = val_datagen.flow_from_directory(
