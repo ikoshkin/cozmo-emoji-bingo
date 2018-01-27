@@ -12,7 +12,7 @@ from keras.utils import np_utils
 from keras import backend as K
 
 import pandas as pd
-import datetime
+import time
 import os
 import shutil
 
@@ -197,22 +197,26 @@ def model(train_datagen, val_datagen, test_datagen):
         validation_data=validation_generator,
         validation_steps=20
     )
-
-    drop_history(history.history)
-
+    
     score, acc = model.evaluate_generator(test_generator, steps=20)
+
+
+
+    if 'results' not in globals():
+        global results
+        results = []
+
+    hparams = space
+    hparams['train_loss'] = round(history.history['loss'][0], 5)
+    hparams['train_acc'] = round(history.history['acc'][0], 5)
+    hparams['val_loss'] = round(history.history['val_loss'][0], 5)
+    hparams['val_acc'] = round(history.history['val_acc'][0], 5)
+    results.append(hparams)
+
+    logfname = 'gridsearch.csv'
+    pd.DataFrame(results).to_csv('gridsearch.csv', mode='w', header=True)
+
     return {'loss': -acc, 'status': STATUS_OK, 'model': model}
-
-
-def drop_history(h):
-
-    runname = 'multiten'
-
-
-    h_df = pd.DataFrame(h)
-    hdfname = './hyperas/history{rname}_{timestamp}.csv'.format(rname=runname,
-        timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
-    h_df.to_csv(hdfname)
 
 
 if __name__ == '__main__':
@@ -236,20 +240,14 @@ if __name__ == '__main__':
         batch_size=16,
         class_mode='categorical')
 
-    functions = [drop_history]
-
     best_run, best_model = optim.minimize(model=model,
                                           data=data,
                                           algo=tpe.suggest,
-                                          functions=functions,
                                           max_evals=5,
                                           trials=Trials(),
                                           eval_space=True)
 
-    runname = 'multiten'
-    h5name = './hyperas/history{rname}_{timestamp}.csv'.format(rname=runname,
-                                                            timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
-    best_model.save(h5name)
+    best_model.save(f'best_multite_{time.time()}.h5')
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20)) 
