@@ -192,7 +192,7 @@ def model(train_datagen, val_datagen, test_datagen):
 
     drop_history(history.history)
 
-    score, acc = model.evaluate(test_generator, verbose=0)
+    score, acc = model.evaluate_generator(test_generator, verbose=1, steps=20)
     return {'loss': -acc, 'status': STATUS_OK, 'model': model}
 
 
