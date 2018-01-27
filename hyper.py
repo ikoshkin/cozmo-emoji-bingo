@@ -106,7 +106,7 @@ def model(train_datagen, val_datagen, test_datagen):
     model.add(Convolution2D(64, 3, 3))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout({{uniform(0, 1)}}))
 
     model.add(Convolution2D(128, 3, 3))
     model.add(Activation('relu'))
@@ -115,11 +115,19 @@ def model(train_datagen, val_datagen, test_datagen):
     model.add(Convolution2D(128, 3, 3))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout({{uniform(0, 1)}}))
 
     model.add(Flatten())
     model.add(Dense(512))
     model.add(Activation('relu'))
+
+    # If we choose 'four', add an additional fourth layer
+    if conditional({{choice(['three', 'four'])}}) == 'four':
+        model.add(Dense(100))
+        model.add({{choice([Dropout(0.5), Activation('linear')])}})
+        model.add(Activation('relu'))
+
+
     # model.add(Dropout(0.5))
     model.add(Dense(nb_classes))
     model.add(Activation('softmax'))
@@ -131,7 +139,7 @@ def model(train_datagen, val_datagen, test_datagen):
     # let's train the model using SGD + momentum (how original).
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
-                  optimizer=sgd,
+                  optimizer={{choice(['rmsprop', 'adam', 'sgd'])}},
                   metrics=['accuracy'])
 
 
@@ -145,8 +153,8 @@ def model(train_datagen, val_datagen, test_datagen):
 
     class_mode = 'categorical'
 
-    n_epochs = 1
-    batch_size = 16
+    n_epochs = {{choice([10, 50, 100])}}
+    batch_size = {{choice([8, 16, 64])}}
     steps_per_epoch = 300 * 10 // batch_size
     # steps_per_epoch = 300
 
@@ -154,7 +162,7 @@ def model(train_datagen, val_datagen, test_datagen):
         train_dir,
         target_size=image_size,
         color_mode=color_mode,
-        batch_size=batch_size,
+        batch_size=batch_size
         class_mode=class_mode)
 
     validation_generator = val_datagen.flow_from_directory(
@@ -241,7 +249,7 @@ if __name__ == '__main__':
     runname = 'multiten'
     h5name = './hyperas/history{rname}_{timestamp}.csv'.format(rname=runname,
                                                             timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
-    best_model.save('./hyperas/{}.h5'.format(h5name))
+    best_model.save(h5name)
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20)) 
