@@ -241,7 +241,7 @@ if __name__ == '__main__':
     runname = 'multiten'
     h5name = './hyperas/history{rname}_{timestamp}.csv'.format(rname=runname,
                                                             timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
-    best_model.save('./hyperas/{}_{}.h5'.format(model_name, info))
+    best_model.save('./hyperas/{}.h5'.format(h5name))
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20)) 
