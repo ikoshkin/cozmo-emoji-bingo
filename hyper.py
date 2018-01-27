@@ -55,7 +55,7 @@ def data():
         vertical_flip=False)  # randomly flip images
     '''
 
-    datagen = ImageDataGenerator(
+    train_datagen = ImageDataGenerator(
         rescale=1 / 255.,
         rotation_range=15,
         width_shift_range=0.3,
