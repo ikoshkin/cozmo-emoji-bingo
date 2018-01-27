@@ -9,6 +9,7 @@ from keras.optimizers import SGD
 from keras.preprocessing.image import ImageDataGenerator
 from keras.datasets import cifar10
 from keras.utils import np_utils
+from keras import backend as K
 
 import pandas as pd
 import datetime
@@ -208,6 +209,8 @@ def drop_history(h):
 
 if __name__ == '__main__':
 
+    
+
 
     if os.path.exists('./hyperas'):
         shutil.rmtree('./hyperas')
@@ -230,3 +233,5 @@ if __name__ == '__main__':
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20))
+    if K.backend() == 'tensorflow':
+        K.clear_session()
