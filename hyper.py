@@ -236,8 +236,13 @@ if __name__ == '__main__':
                                           trials=Trials(),
                                           eval_space=True)
 
-    print("Evalutation of best performing model:")
-    print(best_model.evaluate_generator(test_generator, steps=20))
+    runname = 'multiten'
+    h5name = './hyperas/history{rname}_{timestamp}.csv'.format(rname=runname,
+                                                            timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
+    best_model.save('./hyperas/{}_{}.h5'.format(model_name, info))
+
+    # print("Evalutation of best performing model:")
+    # print(best_model.evaluate_generator(test_generator, steps=20)) 
     
     if K.backend() == 'tensorflow':
             K.clear_session()
