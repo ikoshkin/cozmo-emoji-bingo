@@ -36,15 +36,19 @@ def plot_history(hist_df, fname=None):
 
     epochs = range(1, len(acc) + 1)
 
+    fig = plt.figure(figsize=(20, 8))
+
+    fig.add_subplot(121)
+
     plt.plot(epochs, acc, 'bo', label='Training acc')
     plt.plot(epochs, val_acc, 'b', label='Validation acc')
     plt.title('Training and validation accuracy')
     plt.legend()
 
-    plt.figure()
+    fig.add_subplot(122)
 
-    plt.plot(epochs, loss, 'bo', label='Training loss')
-    plt.plot(epochs, val_loss, 'b', label='Validation loss')
+    plt.plot(epochs, loss, 'ro', label='Training loss')
+    plt.plot(epochs, val_loss, 'r', label='Validation loss')
     plt.title('Training and validation loss')
     plt.legend()
 

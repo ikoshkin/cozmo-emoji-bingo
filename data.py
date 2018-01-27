@@ -27,6 +27,11 @@ def new_folder(path):
     os.makedirs(path, exist_ok=True)
     return
 
+def clear_folder(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 def build_dataset(targets, dataset_name, n_images, seed=42):
 
@@ -91,7 +96,17 @@ def build_dataset(targets, dataset_name, n_images, seed=42):
 
 if __name__ == '__main__':
 
-    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'lipstick', 'octopus', 'poop','robot', 'rocket', 'unicorn']
+    targets = ['alien', 
+               'devil',
+               'ghost',
+               'hearteyes',
+               'lipstick',
+               'octopus',
+               'poop',
+               'robot',
+               'rocket',
+               'unicorn']
+               
     data_split= {'train': 300, 'validation': 100, 'test': 100}
 
     dataset_name = 'ten_multiclass'
