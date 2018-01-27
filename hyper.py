@@ -221,12 +221,12 @@ if __name__ == '__main__':
 
     test_dir = './images/ten_multiclass/test'
 
-    test_generator = test_datagen.flow_from_directory(
-        test_dir,
-        target_size=(244, 244),
-        color_mode='grayscale',
-        batch_size=16,
-        class_mode='categorical')
+    # test_generator = test_datagen.flow_from_directory(
+    #     test_dir,
+    #     target_size=(244, 244),
+    #     color_mode='grayscale',
+    #     batch_size=16,
+    #     class_mode='categorical')
 
     functions = [drop_history]
 
@@ -243,8 +243,8 @@ if __name__ == '__main__':
                                                             timestamp=datetime.datetime.now().strftime('%m%d_%H%M%S'))
     best_model.save('./hyperas/{}_{}.h5'.format(model_name, info))
 
-    print("Evalutation of best performing model:")
-    print(best_model.evaluate_generator(test_generator, steps=20)) 
+    # print("Evalutation of best performing model:")
+    # print(best_model.evaluate_generator(test_generator, steps=20)) 
     
     if K.backend() == 'tensorflow':
             K.clear_session()
