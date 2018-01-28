@@ -115,6 +115,7 @@ def train(model_name, dataset_name, targets, info):
     ml = ModelLoader(n_labels=n_labels,
                      model_name=model_name,
                      image_size=image_size)
+
     model = ml.model
 
     #: Define callbacks
@@ -124,7 +125,7 @@ def train(model_name, dataset_name, targets, info):
         verbose=1,
         save_best_only=True, save_weights_only=True)
 
-    csvlogger = CSVLogger(f'./output/logs/{model_name}-{info}.log')
+    csvlogger = CSVLogger('./output/logs/{}_{}.log'.format(model_name, info))
 
     callbacks = [checkpointer, csvlogger]
 
@@ -171,6 +172,6 @@ if __name__=='__main__':
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
-    h_df.to_csv(f'{model_run_info}.csv')
+    h_df.to_csv('{}.csv'.format(model_run_info))
 
-    plot_history(h_df, fname='cnn_multi_h_r.png')
+    #plot_history(h_df, fname='cnn_multi_h_r.png')
