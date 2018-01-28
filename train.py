@@ -24,6 +24,9 @@ def save_history(history, fname):
     val_acc = history.history['val_acc']
     nb_epoch = len(acc)
 
+    return
+
+
 def plot_history(hist_df, fname=None):
 
     acc = hist_df['acc']
@@ -54,6 +57,12 @@ def plot_history(hist_df, fname=None):
     else:
         plt.show()
 
+    return
+
+
+labels_want = ['alien', 'devil', 'ghost', 'hearteyes',
+               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+
 def train(model_name, dataset_name, targets, info):
 
     #: Data parameters
@@ -73,14 +82,10 @@ def train(model_name, dataset_name, targets, info):
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
-    
-    image_size = (224, 224)
-    img_channels = 1
-    input_shape = (image_size + (img_channels,))
-
+    image_shape = (224, 224, 1)
+    image_size = image_shape[:2]
     class_mode = 'categorical'
     color_mode = 'grayscale'
-    
     
     # train_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -89,11 +94,12 @@ def train(model_name, dataset_name, targets, info):
         rotation_range=20,
         width_shift_range=0.3,
         height_shift_range=0.3,
+        
         # featurewise_std_normalization=True,
         shear_range=0.3,
         zoom_range=0.1,
         horizontal_flip=True,
-        fill_mode='nearest')
+        fill_mode=255. / 2)
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -113,12 +119,11 @@ def train(model_name, dataset_name, targets, info):
         color_mode=color_mode
         )
 
+
     #: Load model
     n_labels = len(targets)
-    ml = ModelLoader(n_labels=n_labels,
-                     model_name=model_name,
-                     input_shape=image_size)
-
+    ml = ModelLoader(n_labels=n_labels, model_name=model_name,
+                     input_shape=image_shape)
     model = ml.model
 
     #: Define callbacks
@@ -127,7 +132,7 @@ def train(model_name, dataset_name, targets, info):
         # '-{epoch:03d}-{loss:.3f}.hdf5',
         '.hdf5',
         verbose=1,
-        save_best_only=True, save_weights_only=True)
+        save_best_only=True)
 
     csvlogger = CSVLogger('./output/logs/{}_{}.log'.format(model_name, info))
 
@@ -172,8 +177,8 @@ if __name__=='__main__':
     ]
 
     model_name = 'simple_cnn_multi_v1'
-    dataset_name = 'ten_multiclass'
-    model_run_info = '10c_adam_multi-multi'
+    dataset_name = 'five_multiclass'
+    model_run_info = '5c_adam_multi-multi'
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
