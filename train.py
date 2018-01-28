@@ -69,7 +69,7 @@ def train(model_name, dataset_name, targets, info):
     #: Training parameters
 
     n_epochs = 100
-    batch_size = 2
+    batch_size = 16
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
@@ -124,7 +124,8 @@ def train(model_name, dataset_name, targets, info):
     #: Define callbacks
     checkpointer = ModelCheckpoint(
         filepath='./output/hdf5/{}'.format(model_name) +
-        '-{epoch:03d}-{loss:.3f}.hdf5',
+        # '-{epoch:03d}-{loss:.3f}.hdf5',
+        '.hdf5',
         verbose=1,
         save_best_only=True, save_weights_only=True)
 
@@ -161,12 +162,13 @@ if __name__=='__main__':
         'devil',
         'ghost',
         'hearteyes',
-        'lipstick',
-        'octopus',
-        'poop',
-        'robot',
-        'rocket',
-        'unicorn'
+        'human',
+        # 'lipstick',
+        # 'octopus',
+        # 'poop',
+        # 'robot',
+        # 'rocket',
+        # 'unicorn'
     ]
 
     model_name = 'simple_cnn_multi_v1'

@@ -28,21 +28,21 @@ class ModelLoader():
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
-        if self.model_name == 'simple_cnn_multi':
+        elif self.model_name == 'simple_cnn_multi':
             #print('loading {}'.format(self.model_name))
             self.model = self.simple_cnn_multi()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
-        if self.model_name == 'simple_cnn_multi_v1':
+        elif self.model_name == 'simple_cnn_multi_v1':
             #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi_v1()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.Adam(lr=1e-5)
             self.metrics = ['acc']
 
-        if self.model_name == 'simple_cnn_multi_v2':
+        elif self.model_name == 'simple_cnn_multi_v2':
             #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi_v2()
             self.loss = 'binary_crossentropy'
