@@ -1,0 +1,2 @@
+,Dropout,Dropout_1,add,conditional,optimizer,optimizer_1,optimizer_2,train_acc,train_loss,val_acc,val_loss
+0,0.3207527760045966,0.7342146978592597,<keras.layers.core.Activation object at 0x7fb12eca2b38>,three,rmsprop,50,16,0.151,2.263902,0.1875,2.206242
