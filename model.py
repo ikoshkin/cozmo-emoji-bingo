@@ -11,31 +11,39 @@ from keras.preprocessing.image import ImageDataGenerator
 class ModelLoader():
 
     def __init__(self, n_labels, model_name,
-                 saved_weights=None, optimizer=None, image_size=(320, 240)):
+                 saved_weights=None, optimizer=None, input_shape=(320, 240, 3)):
 
         self.n_labels = n_labels
         self.load_model = models.load_model
         self.saved_weights = saved_weights
         self.model_name = model_name
-        self.input_shape = (image_size + (3,))
+        self.input_shape = input_shape
+        self.input_size = input_shape[:2]
 
         # Loads the specified model
         if self.model_name == 'simple_cnn_binary':
-            print('Loading Simple CNN (binary)')
+            print(f'loading {self.model_name}')
             self.model = self.simple_cnn_binary()
             self.loss = 'binary_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
         if self.model_name == 'simple_cnn_multi':
-            print('Loading Simple CNN (multi)')
+            print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
+        if self.model_name == 'simple_cnn_multi_v1':
+            print(f'loading {self.model_name}')
+            self.model = self.simple_cnn_multi()
+            self.loss = 'categorical_crossentropy'
+            self.optimizer = optimizers.Adam(lr=1e-4)
+            self.metrics = ['acc']
+
         elif self.model_name == 'vgg16_v0':
-            print('CNN vgg16')
+            print(f'loading {self.model_name}')
             self.model = self.small_vgg16_v0()
             self.loss = 'binary_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-5)
@@ -94,6 +102,41 @@ class ModelLoader():
         model.add(layers.Flatten())
         model.add(layers.Dense(512, activation='relu'))
         model.add(layers.Dense(self.n_labels, activation='softmax'))
+
+        return model
+
+
+     def simple_cnn_multi_v1(self):
+
+        model = models.Sequential()
+        
+        #: Conv Network
+
+        #: Conv Block 1
+        model.add(layers.Conv2D(32, (3, 3),input_shape=self.input_shape))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Conv Block 2
+        model.add(layers.Conv2D(64, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+        
+        #: Conv Block 3
+        model.add(layers.Conv2D(128, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Conv Block 4
+        model.add(layers.Conv2D(128, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Classifier Network - stack of dense layers
+        model.add(layers.Flatten())
+        model.add(layers.Dense(512, activation='relu'))
+        model.add(layers.Dense(self.n_labels))
+        model.add(layers.Activation('softmax'))
 
         return model
 
