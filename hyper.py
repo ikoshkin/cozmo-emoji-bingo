@@ -10,6 +10,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.datasets import cifar10
 from keras.utils import np_utils
 from keras import backend as K
+from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 
 import pandas as pd
 import time
@@ -122,10 +123,12 @@ def model(train_datagen, val_datagen, test_datagen):
     model.add(Activation('relu'))
 
     # If we choose 'four', add an additional fourth layer
+    '''
     if conditional({{choice(['three', 'four'])}}) == 'four':
         model.add(Dense(100))
         model.add({{choice([Dropout(0.5), Activation('linear')])}})
         model.add(Activation('relu'))
+    '''
 
 
     # model.add(Dropout(0.5))
@@ -137,7 +140,7 @@ def model(train_datagen, val_datagen, test_datagen):
 
 
     # let's train the model using SGD + momentum (how original).
-    sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+    #sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
                   optimizer={{choice(['rmsprop', 'adam', 'sgd'])}},
                   metrics=['accuracy'])
@@ -153,8 +156,8 @@ def model(train_datagen, val_datagen, test_datagen):
 
     class_mode = 'categorical'
 
-    n_epochs = {{choice([10, 50, 100])}}
-    batch_size = {{choice([8, 16, 64])}}
+    n_epochs = 100 #{{choice([10, 50, 100])}}
+    batch_size = 8 #{{choice([2, 8, 16])}}
     steps_per_epoch = 300 * 10 // batch_size
     # steps_per_epoch = 300
 
@@ -188,12 +191,21 @@ def model(train_datagen, val_datagen, test_datagen):
                         nb_epoch=nb_epoch,
                         validation_data=(X_test, Y_test))
     '''
+    
+    earlystopper = EarlyStopping(monitor='val_loss', 
+                                 min_delta=0, 
+                                 patience=3, 
+                                 verbose=1, 
+                                 mode='auto')
+    
+    callbacks = [earlystopper]
 
     history = model.fit_generator(
         generator=train_generator,
         steps_per_epoch=steps_per_epoch,
         epochs=n_epochs,
         verbose=1,
+        #callbacks=callbacks,
         validation_data=validation_generator,
         validation_steps=20
     )
@@ -207,10 +219,10 @@ def model(train_datagen, val_datagen, test_datagen):
         results = []
 
     hparams = space
-    hparams['train_loss'] = round(history.history['loss'][0], 5)
-    hparams['train_acc'] = round(history.history['acc'][0], 5)
-    hparams['val_loss'] = round(history.history['val_loss'][0], 5)
-    hparams['val_acc'] = round(history.history['val_acc'][0], 5)
+    hparams['train_loss'] = round(history.history['loss'][1], 6)
+    hparams['train_acc'] = round(history.history['acc'][1], 6)
+    hparams['val_loss'] = round(history.history['val_loss'][1], 6)
+    hparams['val_acc'] = round(history.history['val_acc'][1], 6)
     results.append(hparams)
 
     logfname = 'gridsearch.csv'
@@ -247,7 +259,7 @@ if __name__ == '__main__':
                                           trials=Trials(),
                                           eval_space=True)
 
-    best_model.save(f'best_multite_{time.time()}.h5')
+    best_model.save('best_multite_{}.h5'.format(int(time.time())))
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate_generator(test_generator, steps=20)) 
