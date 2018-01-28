@@ -162,16 +162,16 @@ if __name__=='__main__':
         'ghost',
         'hearteyes',
         'lipstick',
-        # 'octopus',
-        # 'poop',
-        # 'robot',
-        # 'rocket',
-        # 'unicorn'
+        'octopus',
+        'poop',
+        'robot',
+        'rocket',
+        'unicorn'
     ]
 
     model_name = 'simple_cnn_multi_v1'
-    dataset_name = 'five_multiclass'
-    model_run_info = '5c_adam_multi-multi'
+    dataset_name = 'ten_multiclass'
+    model_run_info = '10c_adam_multi-multi'
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
