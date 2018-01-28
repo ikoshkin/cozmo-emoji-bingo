@@ -24,9 +24,6 @@ def save_history(history, fname):
     val_acc = history.history['val_acc']
     nb_epoch = len(acc)
 
-    return
-
-
 def plot_history(hist_df, fname=None):
 
     acc = hist_df['acc']
@@ -56,12 +53,6 @@ def plot_history(hist_df, fname=None):
         plt.savefig(fname)
     else:
         plt.show()
-
-    return
-
-
-labels_want = ['alien', 'devil', 'ghost', 'hearteyes',
-               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
 def train(model_name, dataset_name, targets, info):
 
@@ -119,10 +110,10 @@ def train(model_name, dataset_name, targets, info):
         color_mode=color_mode
         )
 
-
     #: Load model
     n_labels = len(targets)
-    ml = ModelLoader(n_labels=n_labels, model_name=model_name,
+    ml = ModelLoader(n_labels=n_labels,
+                     model_name=model_name,
                      image_size=image_size)
     model = ml.model
 
