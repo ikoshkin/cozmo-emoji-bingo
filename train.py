@@ -68,7 +68,7 @@ def train(model_name, dataset_name, targets, info):
     #: Data parameters
     data_dir = get_data_dirs(dataset_name)
     n_images = {'train': 300, 'validation': 100, 'test': 100}
-    image_size = (320, 240)
+    
 
     if not os.path.exists("./output/hdf5"):
         new_folder("./output/hdf5")
@@ -78,40 +78,46 @@ def train(model_name, dataset_name, targets, info):
     #: Training parameters
 
     n_epochs = 100
-    batch_size = 20
+    batch_size = 16
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
+    image_shape = (224, 224, 1)
+    image_size = image_shape[:2]
+    class_mode = 'categorical'
+    color_mode = 'grayscale'
     
     # train_datagen = ImageDataGenerator(rescale=1. / 255)
 
     train_datagen = ImageDataGenerator(
         rescale=1. / 255,
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
+        rotation_range=20,
+        width_shift_range=0.3,
+        height_shift_range=0.3,
+        
+        # featurewise_std_normalization=True,
+        shear_range=0.3,
+        zoom_range=0.1,
         horizontal_flip=True,
-        fill_mode='nearest')
+        fill_mode=255. / 2)
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
-
-    class_mode = 'categorical'
 
     train_generator = train_datagen.flow_from_directory(
         data_dir['train'],
         target_size=image_size,
         batch_size=batch_size,
         class_mode=class_mode,
-        # save_to_dir='./images/keras_train'
+        color_mode=color_mode
         )
 
     validation_generator = test_datagen.flow_from_directory(
         data_dir['validation'],
         target_size=image_size,
         batch_size=batch_size,
-        class_mode=class_mode)
+        class_mode=class_mode,
+        color_mode=color_mode
+        )
 
 
     #: Load model
@@ -127,7 +133,9 @@ def train(model_name, dataset_name, targets, info):
         verbose=1,
         save_best_only=True, save_weights_only=True)
 
-    callbacks = [checkpointer]
+    csvlogger = CSVLogger(f'./output/logs/{model_name}-{info}.log')
+
+    callbacks = [checkpointer, csvlogger]
 
     #: Training
     print('Starting training')
@@ -143,7 +151,7 @@ def train(model_name, dataset_name, targets, info):
     )
 
     model.save('./output/{}_{}.h5'.format(model_name, info))
-    save_history(history, "hist_{}_{}".format(model_name, info))
+    save_history(history, "history_{}_{}".format(model_name, info))
 
     return history
 
@@ -153,16 +161,25 @@ if __name__=='__main__':
     # model_name = 'vgg16_v0'
     # dataset_name = 'robot_human'
     
+    targets = [
+        'alien',
+        'devil',
+        'ghost',
+        'hearteyes',
+        'lipstick',
+        # 'octopus',
+        # 'poop',
+        # 'robot',
+        # 'rocket',
+        # 'unicorn'
+    ]
 
-    model_name = 'simple_cnn_multi'
-    dataset_name = 'ten_multiclass'
-    model_run_info = '10c_with_aug'
-
-    targets = ['alien', 'devil', 'ghost', 'hearteyes', 'lipstick',
-        'octopus', 'poop', 'robot', 'rocket', 'unicorn']
+    model_name = 'simple_cnn_multi_v1'
+    dataset_name = 'five_multiclass'
+    model_run_info = '5c_adam_multi-multi'
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
-    # h_df.to_csv('10_multiclass.csv')
+    h_df.to_csv(f'{model_run_info}.csv')
 
-    # plot_history(h_df, fname='cnn_multi_h_r.png')
+    plot_history(h_df, fname='cnn_multi_h_r.png')
