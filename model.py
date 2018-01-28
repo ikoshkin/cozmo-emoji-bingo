@@ -11,7 +11,7 @@ from keras.preprocessing.image import ImageDataGenerator
 class ModelLoader():
 
     def __init__(self, n_labels, model_name,
-                 saved_weights=None, optimizer=None, input_shape=(320, 240, 3)):
+                 saved_weights=None, optimizer=None, input_shape=(224, 224, 1)):
 
         self.n_labels = n_labels
         self.load_model = models.load_model
@@ -37,7 +37,7 @@ class ModelLoader():
 
         if self.model_name == 'simple_cnn_multi_v1':
             #print(f'loading {self.model_name}')
-            self.model = self.simple_cnn_multi()
+            self.model = self.simple_cnn_multi_v1()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.Adam(lr=1e-4)
             self.metrics = ['acc']
@@ -112,7 +112,7 @@ class ModelLoader():
         #: Conv Network
 
         #: Conv Block 1
-        model.add(layers.Conv2D(32, (3, 3),input_shape=self.input_shape))
+        model.add(layers.Conv2D(32, (3, 3), input_shape=(224, 224, 1)))
         model.add(layers.Activation('relu'))
         model.add(layers.MaxPooling2D((2, 2)))
 

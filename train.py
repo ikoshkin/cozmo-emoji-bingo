@@ -69,14 +69,18 @@ def train(model_name, dataset_name, targets, info):
     #: Training parameters
 
     n_epochs = 100
-    batch_size = 16
+    batch_size = 2
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
-    image_shape = (224, 224, 1)
-    image_size = image_shape[:2]
+    
+    image_size = (224, 224)
+    img_channels = 1
+    input_shape = (image_size + (img_channels,))
+
     class_mode = 'categorical'
     color_mode = 'grayscale'
+    
     
     # train_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -85,12 +89,11 @@ def train(model_name, dataset_name, targets, info):
         rotation_range=20,
         width_shift_range=0.3,
         height_shift_range=0.3,
-        
         # featurewise_std_normalization=True,
         shear_range=0.3,
         zoom_range=0.1,
         horizontal_flip=True,
-        fill_mode=255. / 2)
+        fill_mode='nearest')
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -114,7 +117,7 @@ def train(model_name, dataset_name, targets, info):
     n_labels = len(targets)
     ml = ModelLoader(n_labels=n_labels,
                      model_name=model_name,
-                     image_size=image_size)
+                     input_shape=image_size)
 
     model = ml.model
 
