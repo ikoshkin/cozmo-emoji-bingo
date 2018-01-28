@@ -22,28 +22,28 @@ class ModelLoader():
 
         # Loads the specified model
         if self.model_name == 'simple_cnn_binary':
-            print(f'loading {self.model_name}')
+            #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_binary()
             self.loss = 'binary_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
         if self.model_name == 'simple_cnn_multi':
-            print(f'loading {self.model_name}')
+            #print('loading {}'.format(self.model_name))
             self.model = self.simple_cnn_multi()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
         if self.model_name == 'simple_cnn_multi_v1':
-            print(f'loading {self.model_name}')
+            #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi()
             self.loss = 'categorical_crossentropy'
             self.optimizer = optimizers.Adam(lr=1e-4)
             self.metrics = ['acc']
 
         elif self.model_name == 'vgg16_v0':
-            print(f'loading {self.model_name}')
+            #print(f'loading {self.model_name}')
             self.model = self.small_vgg16_v0()
             self.loss = 'binary_crossentropy'
             self.optimizer = optimizers.RMSprop(lr=1e-5)
@@ -104,9 +104,8 @@ class ModelLoader():
         model.add(layers.Dense(self.n_labels, activation='softmax'))
 
         return model
-
-
-     def simple_cnn_multi_v1(self):
+    
+    def simple_cnn_multi_v1(self):
 
         model = models.Sequential()
         
