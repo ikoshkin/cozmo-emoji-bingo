@@ -60,8 +60,6 @@ def plot_history(hist_df, fname=None):
     return
 
 
-labels_want = ['alien', 'devil', 'ghost', 'hearteyes',
-               'lipstick', 'octopus', 'poop', 'robot', 'rocket', 'unicorn']
 
 def train(model_name, dataset_name, targets, info):
 
@@ -77,13 +75,16 @@ def train(model_name, dataset_name, targets, info):
 
     #: Training parameters
 
-    n_epochs = 100
+    n_epochs = 10
     batch_size = 16
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
-    image_shape = (224, 224, 1)
-    image_size = image_shape[:2]
+
+    image_size = (224, 224)
+    img_channels = 1
+    input_shape = (image_size + (img_channels,))
+
     class_mode = 'categorical'
     color_mode = 'grayscale'
     
@@ -99,7 +100,7 @@ def train(model_name, dataset_name, targets, info):
         shear_range=0.3,
         zoom_range=0.1,
         horizontal_flip=True,
-        fill_mode=255. / 2)
+        fill_mode='nearest')
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
@@ -122,8 +123,10 @@ def train(model_name, dataset_name, targets, info):
 
     #: Load model
     n_labels = len(targets)
-    ml = ModelLoader(n_labels=n_labels, model_name=model_name,
-                     input_shape=image_shape)
+    ml = ModelLoader(n_labels=n_labels,
+                     model_name=model_name,
+                     input_shape=image_size)
+
     model = ml.model
 
     #: Define callbacks
@@ -151,8 +154,8 @@ def train(model_name, dataset_name, targets, info):
         validation_steps=20
     )
 
-    model.save('./output/{}_{}.h5'.format(model_name, info))
-    save_history(history, "history_{}_{}".format(model_name, info))
+    model.save('./output/hdf5/{}_{}.h5'.format(model_name, info))
+    # save_history(history, "./output/logs/history_{}_{}".format(model_name, info))
 
     return history
 
@@ -182,6 +185,6 @@ if __name__=='__main__':
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
-    h_df.to_csv('{}.csv'.format(model_run_info))
+    h_df.to_csv('./output/logs/{}.csv'.format(model_run_info))
 
     #plot_history(h_df, fname='cnn_multi_h_r.png')

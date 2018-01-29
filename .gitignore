@@ -6,6 +6,7 @@ __pycache__/
 # macOS
 .DS_Store
 .nosync
+*.code-workspace
 
 #Datasets
 images/
@@ -16,6 +17,7 @@ testpred/
 *.sh
 
 # Model savefiles
+archived/
 output/
 output-aws/
 h5/

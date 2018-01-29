@@ -11,7 +11,9 @@ from keras.preprocessing.image import ImageDataGenerator
 class ModelLoader():
 
     def __init__(self, n_labels, model_name,
-                 saved_weights=None, optimizer=None, input_shape=(320, 240, 3)):
+                 saved_weights=None, 
+                 optimizer=None, 
+                 input_shape=(224, 224, 1)):
 
         self.n_labels = n_labels
         self.load_model = models.load_model
