@@ -11,6 +11,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from model import ModelLoader
 from data import get_data_dirs, new_folder
 
+from keras import backend as K
+
 def save_history(history, fname):
 
     h_df = pd.DataFrame(history.history)
@@ -186,5 +188,9 @@ if __name__=='__main__':
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
     h_df.to_csv('./output/logs/{}.csv'.format(model_run_info))
+
+    if K.backend() == 'tensorflow':
+            K.clear_session()
+
 
     #plot_history(h_df, fname='cnn_multi_h_r.png')
