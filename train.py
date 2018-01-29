@@ -77,8 +77,8 @@ def train(model_name, dataset_name, targets, info):
 
     #: Training parameters
 
-    n_epochs = 10
-    batch_size = 16
+    n_epochs = 100
+    batch_size = 4
     steps_per_epoch = n_images['train'] * len(targets) // batch_size #// n_epochs
     
     #: Load data generators
@@ -181,9 +181,9 @@ if __name__=='__main__':
         # 'unicorn'
     ]
 
-    model_name = 'simple_cnn_multi_v1'
+    model_name = 'simple_cnn_multi'
     dataset_name = 'five_multiclass'
-    model_run_info = '5c_adam_multi-multi'
+    model_run_info = '5c_adam_multi-multi-b4'
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
