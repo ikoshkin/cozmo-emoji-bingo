@@ -181,7 +181,7 @@ if __name__=='__main__':
         # 'unicorn'
     ]
 
-    model_name = 'simple_cnn_multi'
+    model_name = 'simple_cnn_multi_v1'
     dataset_name = 'five_multiclass'
     model_run_info = '5c_adam_multi-multi-b4'
 
