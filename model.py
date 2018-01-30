@@ -41,7 +41,7 @@ class ModelLoader():
             #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi_v1()
             self.loss = 'categorical_crossentropy'
-            self.optimizer = optimizers.Adam(lr=1e-5)
+            self.optimizer = optimizers.Adam()
             self.metrics = ['acc']
 
         elif self.model_name == 'simple_cnn_multi_v2':
