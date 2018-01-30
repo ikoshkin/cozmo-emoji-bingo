@@ -16,20 +16,22 @@ from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
 
+class_names = {
+    0: 'alien',
+    1: 'devil',
+    2: 'ghost',
+    3: 'hearteyes',
+    4: 'human',
+    5: 'lipstick',
+    6: 'octopus',
+    7: 'poop',
+    8: 'robot',
+    9: 'rocket',
+    10: 'unicorn'
+}
 
-class_names = {0: 'alien',
-               1: 'devil',
-               2: 'ghost',
-               3: 'hearteyes',
-               4: 'lipstick',
-               5: 'octopus',
-               6: 'poop',
-               7: 'robot',
-               8: 'rocket',
-               9: 'unicorn'}
-
-h5_file = './output-aws/tenclasses-augm/simple_cnn_multi_10c_with_aug.h5'
-hdf5_file = './output-aws/tenclasses-augm/hdf5/simple_cnn_multi-071-0.163.hdf5'
+h5_file = './output-aws/all_bin_sigm-130pm/output/hdf5/simple_cnn_multi_v2_all_bin_sigm.h5'
+hdf5_file = './output-aws/all_bin_sigm-130pm/output/hdf5/simple_cnn_multi_v2.hdf5'
 
 class ImageClassifier():
     
@@ -38,7 +40,9 @@ class ImageClassifier():
         self.class_names = class_names
         self.top_n = None
         self.img_file = None
-        self.img_size = (320, 240)
+        # self.img_size = (320, 240)
+        self.img_size = (224, 224)
+        self.grayscale = True
         self.model = self.load_model_and_weights(m_path, w_path)
 
     def load_model_and_weights(self, m_path, w_path):
@@ -48,7 +52,9 @@ class ImageClassifier():
 
     def classify(self, img_file):
 
-        img = load_img(img_file, target_size=self.img_size)
+        img = load_img(img_file,
+                       target_size=self.img_size,
+                       grayscale=self.grayscale)
 
         x = img_to_array(img)
         x = np.expand_dims(x, axis=0)
