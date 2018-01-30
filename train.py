@@ -181,9 +181,9 @@ if __name__=='__main__':
         'unicorn'
     ]
 
-    model_name = 'simple_cnn_multi_v2'
+    model_name = 'simple_cnn_multi'
     dataset_name = 'all_multiclass'
-    model_run_info = 'all_bin_sigm'
+    model_run_info = 'all_categ_softmax'
 
     history=train(model_name, dataset_name, targets, model_run_info)
     h_df = pd.DataFrame(history.history)
