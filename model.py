@@ -48,7 +48,7 @@ class ModelLoader():
             #print(f'loading {self.model_name}')
             self.model = self.simple_cnn_multi_v2()
             self.loss = 'binary_crossentropy'
-            self.optimizer = optimizers.Adam(lr=1e-4)
+            self.optimizer = optimizers.RMSprop(lr=1e-4)
             self.metrics = ['acc']
 
         elif self.model_name == 'vgg16_v0':
@@ -145,6 +145,40 @@ class ModelLoader():
         model.add(layers.Dense(512, activation='relu'))
         model.add(layers.Dense(self.n_labels))
         model.add(layers.Activation('softmax'))
+
+        return model
+
+    def simple_cnn_multi_v2(self):
+
+        model = models.Sequential()
+
+        #: Conv Network
+
+        #: Conv Block 1
+        model.add(layers.Conv2D(32, (3, 3), input_shape=(224, 224, 1)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Conv Block 2
+        model.add(layers.Conv2D(64, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Conv Block 3
+        model.add(layers.Conv2D(128, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Conv Block 4
+        model.add(layers.Conv2D(128, (3, 3)))
+        model.add(layers.Activation('relu'))
+        model.add(layers.MaxPooling2D((2, 2)))
+
+        #: Classifier Network - stack of dense layers
+        model.add(layers.Flatten())
+        model.add(layers.Dense(512, activation='relu'))
+        model.add(layers.Dense(self.n_labels))
+        model.add(layers.Activation('sigmoid'))
 
         return model
 
